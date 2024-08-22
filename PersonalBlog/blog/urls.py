@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from.import views
@@ -8,5 +10,7 @@ urlpatterns = [
     path('signup.html',views.signup,name='signup'),
     path('user.html',views.user,name='user'),
     path('logout/',views.logout,name="logout"),
-   
-]
+    path('addpost.html',views.addpost,name="addpost"),
+    path('post_create/', views.post_create, name='post_create'),
+    path('myprofile', views.myprofile, name='myprofile'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
