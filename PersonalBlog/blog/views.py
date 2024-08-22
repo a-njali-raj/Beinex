@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages,auth
 from django.contrib.auth import authenticate, login
@@ -32,10 +33,11 @@ def loginn(request):
             messages.error(
                 request, "Invalid username or password"
             )  # Add an error message
-            return redirect("loginn")  # Redirect back to the login page
+            return redirect("login")  
+    response = render(request,"login.html")
+    response['Cache-Control'] = 'no-store,must-revalidate'
+    return response
 
-    
-    return render(request,'login.html')
 @never_cache
 
 def signup(request):
@@ -45,10 +47,14 @@ def signup(request):
         password=request.POST['password']
         user=User.objects.create_user(username=username,email=email,password=password)
         user.save()
+        messages.success(request, "registration successful.")
         return redirect('login')
+    
     else:
         return render(request,'signup.html')
     
+@never_cache
+@login_required(login_url='login') 
 def user(request):
     return render(request,'user.html')
 
@@ -57,3 +63,5 @@ def user(request):
 def logout(request):
     auth.logout(request)
     return redirect("login")
+
+

@@ -8,5 +8,5 @@ urlpatterns = [
     path('signup.html',views.signup,name='signup'),
     path('user.html',views.user,name='user'),
     path('logout/',views.logout,name="logout"),
-    
+   
 ]
