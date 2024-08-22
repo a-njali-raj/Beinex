@@ -1,0 +1,158 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <!-- meta data -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!--title of site-->
+    <title>Login - MyBlog</title>
+
+    <!-- Add your stylesheets here -->
+    <link href="{% static '/css/style.css' %}" rel="stylesheet" />
+    <style>
+        /* General Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: url('{% static "images/login3.jpeg" %}') no-repeat center center fixed;
+    background-size: cover; /* Cover the entire screen */
+   
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Login Section Styles */
+#login {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 40px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+#login h2 {
+  font-size: 28px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+#login .form-group {
+  margin-bottom: 20px;
+}
+
+#login label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+#login input[type="text"],
+#login input[type="password"] {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+}
+
+#login input[type="text"]:focus,
+#login input[type="password"]:focus {
+  border-color:#44b89d;
+  outline: none;
+}
+
+#login button {
+  width: 100%;
+  padding: 12px 15px;
+  background-color:#44b89d;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#login button:hover {
+  background-color: #32937d;
+}
+
+#login p {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+#login p a {
+  color: #44b89d;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#login p a:hover {
+  color: #237b66;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  #login {
+      padding: 30px;
+      max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  #login h2 {
+      font-size: 24px;
+  }
+
+  #login button {
+      padding: 10px 15px;
+      font-size: 14px;
+  }
+}
+
+    </style>
+</head>
+
+<body>
+    <!--login start -->
+    <section id="login" class="login">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="login-form">
+                        <h2>Login</h2>
+                        <form action=""method="post" id="login-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/.login-->
+</body>
+
+</html>
