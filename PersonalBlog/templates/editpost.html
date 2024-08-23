@@ -1,0 +1,134 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .error {
+        color: red;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2>Edit Post</h2>
+            <form method="POST" enctype="multipart/form-data" action="{% url 'edit_post' post.id %}" id="editPostForm">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="title">Post Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter post title" value="{{ post.title }}" required>
+                    <div id="titleError" class="error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Post Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="5" placeholder="Enter post content" required>{{ post.content }}</textarea>
+                    <div id="contentError" class="error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <input type="text" class="form-control" id="tags" name="tags" placeholder="Enter tags, separated by commas" value="{{ post.tag }}">
+                    <div id="tagsError" class="error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Upload Image</label>
+                    <input type="file" class="form-control-file" id="image" name="image">
+                    <div id="imageError" class="error"></div>
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="Current Image" style="max-width: 100%; margin-top: 10px;">
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Post</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('title');
+        const contentInput = document.getElementById('content');
+        const tagsInput = document.getElementById('tags');
+        const imageInput = document.getElementById('image');
+
+        const titleError = document.getElementById('titleError');
+        const contentError = document.getElementById('contentError');
+        const tagsError = document.getElementById('tagsError');
+        const imageError = document.getElementById('imageError');
+
+        function validateTitle() {
+            if (titleInput.value.trim() === '') {
+                titleError.textContent = 'Title is required.';
+                return false;
+            } else if (titleInput.value.length > 100) {
+                titleError.textContent = 'Title cannot exceed 100 characters.';
+                return false;
+            } else {
+                titleError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateContent() {
+            if (contentInput.value.trim() === '') {
+                contentError.textContent = 'Content is required.';
+                return false;
+            } else {
+                contentError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateTags() {
+            if (tagsInput.value.length > 50) {
+                tagsError.textContent = 'Tags cannot exceed 50 characters.';
+                return false;
+            } else {
+                tagsError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateImage() {
+            const file = imageInput.files[0];
+            if (file) {
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(file.type)) {
+                    imageError.textContent = 'Image must be in PNG or JPEG format.';
+                    return false;
+                }
+                imageError.textContent = '';
+                return true;
+            }
+            return true; // Image is optional
+        }
+
+        titleInput.addEventListener('input', validateTitle);
+        contentInput.addEventListener('input', validateContent);
+        tagsInput.addEventListener('input', validateTags);
+        imageInput.addEventListener('change', validateImage);
+
+        document.getElementById('editPostForm').addEventListener('submit', function(event) {
+            const isTitleValid = validateTitle();
+            const isContentValid = validateContent();
+            const areTagsValid = validateTags();
+            const isImageValid = validateImage();
+
+            if (!isTitleValid || !isContentValid || !areTagsValid || !isImageValid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+{% endblock %}

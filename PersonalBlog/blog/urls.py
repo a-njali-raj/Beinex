@@ -13,4 +13,6 @@ urlpatterns = [
     path('addpost.html',views.addpost,name="addpost"),
     path('post_create/', views.post_create, name='post_create'),
     path('myprofile', views.myprofile, name='myprofile'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),
+    path('delete-post/<int:post_id>/', views.delete_post, name='delete_post'),
+    ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

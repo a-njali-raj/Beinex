@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib import messages,auth
 from django.contrib.auth import authenticate, login
 from django.views.decorators.cache import never_cache
@@ -105,16 +105,58 @@ def post_create(request):
 def myprofile(request):
     user = request.user
     # Fetch the posts of the logged-in user
-    posts = Post.objects.filter(author=user).order_by('-created_at') 
+    posts = Post.objects.filter(author=user,is_available=True).order_by('-created_at')
     
+    # Split the tags in the view and pass them to the context
+    posts_with_tags = []
+    for post in posts:
+        post_tags = post.tag.split(",") if post.tag else []
+        posts_with_tags.append({
+            'post': post,
+            'tags': post_tags
+        })
+
     # Example data for followers and following - you should have actual logic here
     followers_count = 0  # Replace with actual count if you have a followers model
     following_count = 0  # Replace with actual count if you have a following model
 
     context = {
         'user': user,
-        'posts': posts,
+        'posts_with_tags': posts_with_tags,
         'followers_count': followers_count,
         'following_count': following_count,
     }
     return render(request, 'myprofile.html', context)
+
+
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        tags = request.POST.get('tags')
+        image = request.FILES.get('image')
+
+        # Update the post
+        post.title = title
+        post.content = content
+        post.tag = tags
+        if image:
+            post.image = image
+        post.save()
+
+        # Redirect to profile page
+        return redirect('myprofile')
+
+    return render(request, 'editpost.html', {'post': post})
+
+@login_required
+def delete_post(request, post_id):
+    if request.method == 'GET':
+        post = get_object_or_404(Post, id=post_id, author=request.user)
+        post.is_available = False
+        post.save()
+        return redirect('myprofile')
