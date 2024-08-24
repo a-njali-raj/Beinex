@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         /* General Styles */
-/* General Styles */
+/* Base Styles */
 body {
     background-color: #f0f2f5;
     color: #333;
@@ -30,9 +30,35 @@ body {
     margin-left: auto;
 }
 
+/* Navigation Links */
+.navbar-nav .nav-item .nav-link {
+    color: #111213; /* Text color for Home link */
+    font-weight: normal;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #007bff; /* Hover color similar to Logout link */
+    text-decoration: none;
+}
+
+/* Add New Post Button */
+.navbar-nav .nav-item .btn.add-post-btn {
+    background-color: #ffffff; /* Keep background white */
+    color: #0f1010; /* Text color matching Logout */
+    border: none;
+    font-weight: normal;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .btn.add-post-btn:hover {
+    color: #007bff; /* Hover color matching Logout link */
+}
+
+/* Profile Header */
 .profile-header {
-    background-color: #007bff;
-    color: white;
+    background-color: #93cdc1;
+    color: rgb(12, 12, 12);
     padding: 20px;
     border-radius: 5px;
     margin-bottom: 20px;
@@ -43,6 +69,7 @@ body {
     margin: 0;
 }
 
+/* Post Styles */
 .post {
     background: white;
     padding: 20px;
@@ -60,6 +87,7 @@ body {
     line-height: 1.6;
 }
 
+/* Comments Section */
 .comments-section {
     margin-top: 20px;
     border-top: 1px solid #dee2e6;
@@ -74,6 +102,7 @@ body {
     border-radius: 50%;
 }
 
+/* Buttons */
 .btn-primary {
     background-color: #007bff;
     border-color: #007bff;
@@ -84,6 +113,7 @@ body {
     border-color: #004085;
 }
 
+/* Card Styles */
 .card {
     border: 1px solid #dee2e6;
     border-radius: 5px;
@@ -121,6 +151,7 @@ body {
     margin-top: 10px;
 }
 
+/* Responsive Navbar */
 .menu-toggle {
     cursor: pointer;
     font-size: 1.5rem;
@@ -132,26 +163,29 @@ body {
     height: 30px;
     background: transparent;
     border: none;
-    margin-left: 15px; /* Space between logout and menu icon */
+    margin-left: 15px; /* Space between Logout and Menu icon */
 }
 
 .menu-toggle .bar {
     display: block;
     width: 25px;
     height: 3px;
-    background-color: #007bff;
+    background-color: #040506;
     margin: 3px 0;
+}
+.menu-toggle:hover .bar {
+    background-color: #007bff; /* Darker shade on hover */
 }
 
 .notification-icon {
     cursor: pointer;
     font-size: 1.5rem;
-    color: #007bff;
-    margin-left: 15px; /* Space between logout and notification icon */
+    color: #060606;
+    margin-left: 15px; /* Space between Logout and Notification icon */
 }
 
 .notification-icon:hover {
-    color: #0056b3;
+    color:  #007bff;
 }
 
 .sidebar {
@@ -175,13 +209,13 @@ body {
 /* Post Image Container */
 .post-image-container {
     margin-bottom: 20px;
-    text-align: center; /* Center align the image */
+    text-align: center;
 }
 
 .post-image-container img {
-    width: 100%; /* Make the image take the full width of the container */
-    max-width: 500px; /* Set a maximum width to control how large the image can get */
-    height: auto; /* Maintain the aspect ratio */
+    width: 100%;
+    max-width: 500px;
+    height: auto;
     border-radius: 5px;
 }
 
@@ -212,25 +246,130 @@ body {
 }
 
 .post-author i {
-    font-size: 2rem; /* Adjust size of the icon */
-    color: #131414; /* Color of the icon */
+    font-size: 2rem;
+    color: #131414;
     margin-right: 10px;
 }
 
 .author-name {
-    font-size: 1.2rem; /* Adjust the size as needed */
-    color: #333; /* Color for the author name */
+    font-size: 1.2rem;
+    color: #333;
 }
 
 .post-date {
-    font-size: 1rem; /* Adjust size as needed */
-    color: #777; /* Color for the date */
+    font-size: 1rem;
+    color: #777;
 }
 
 .post-title {
-    font-size: 2rem; /* Adjust the size as needed */
-    color: #0a0a0a; /* Color for the post title */
-    margin-bottom: 20px; /* Adjust margin if necessary */
+    font-size: 2rem;
+    color: #0a0a0a;
+    margin-bottom: 20px;
+}
+.message-toaster {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    width: 50%;
+    max-width: 400px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 0.9;
+    font-weight: bold;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.message-toaster .alert-success {
+    background-color: rgba(117, 193, 172, 0.8); /* Green with transparency */
+    color: #100e0e;
+}
+
+.message-toaster .alert-error {
+    background-color: rgba(234, 169, 175, 0.8); /* Red with transparency */
+    color: #060505;
+}
+
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 0;
+    }
+
+    .navbar-nav .nav-item {
+        width: 100%;
+    }
+
+    .navbar-nav .nav-item .nav-link,
+    .navbar-nav .nav-item .btn.add-post-btn {
+        width: 100%;
+        text-align: left;
+        padding: 10px 15px;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .navbar-nav .nav-item .btn.add-post-btn {
+        background-color: #ffffff;
+        color:  #060606;
+    }
+
+    .navbar-nav .nav-item .btn.add-post-btn:hover {
+        color:#007bff;
+    }
+
+    .profile-header {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .post {
+        padding: 15px;
+    }
+
+    .post-title {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .post p {
+        line-height: 1.4;
+    }
+
+    .comments-section {
+        padding-top: 15px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-header {
+        font-size: 1rem;
+    }
+
+    .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .post-title {
+        font-size: 1.5rem;
+    }
+
+    .author-name {
+        font-size: 1rem;
+    }
+
+    .post-date {
+        font-size: 0.875rem;
+    }
+    
+
 }
 
 
@@ -262,6 +401,21 @@ body {
             sidebar.classList.remove('show');
         }, 3000); // 3000 milliseconds = 3 seconds
     });
+    document.addEventListener('DOMContentLoaded', function () {
+    const toasters = document.querySelectorAll('.message-toaster .alert');
+    if (toasters.length > 0) {
+        setTimeout(function () {
+            toasters.forEach(function (toaster) {
+                toaster.style.opacity = '0';
+                setTimeout(function () {
+                    toaster.style.display = 'none';
+                }, 500); // Delay to match the transition
+            });
+        }, 3000); // Display for 3 seconds before disappearing
+    }
+});
+
+
 </script>
 </body>
 

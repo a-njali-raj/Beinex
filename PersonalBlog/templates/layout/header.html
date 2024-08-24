@@ -1,7 +1,9 @@
 {% load static %}
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><B>My Blog</B></a>
+    <a class="navbar-brand" href="{% url 'index' %}" class="nav-icon-text">
+       </i> <b>MyBlog</b>
+    </a>
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
@@ -22,39 +24,19 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
-             
-            <!-- Menu Toggle Button -->
+            <!-- User Profile Link -->
             <li class="nav-item">
-                <button class="menu-toggle" type="button" aria-label="Toggle sidebar">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
+                <a class="nav-link" href="{% url 'myprofile' %}">
+                    {% if user.profile_pic %}
+                        <img src="{{ user.profile_pic.url }}" alt="User Image" class="rounded-circle" width="30" height="30">
+                    {% else %}
+                        <span class="rounded-circle" style="display: inline-block; width: 30px; height: 30px; background-color: #ddd; text-align: center; line-height: 30px;">
+                            <i class="fas fa-user" style="color: #777;"></i>
+                        </span>
+                    {% endif %}
+                    <span>{{ user.username }}</span>
+                </a>
             </li>
         </ul>
     </div>
 </nav>
-
-<!-- Sidebar -->
-<div class="sidebar" id="userProfile">
-    <div class="card">
-        <div class="card-header">
-            My Profile
-        </div>
-        <div class="card-body">
-            <div class="icon-text">
-                <i class="fas fa-file-alt"></i>
-                <p><strong>Posts:</strong> 12</p>
-            </div>
-            <div class="icon-text">
-                <i class="fas fa-user-friends"></i>
-                <p><strong>Followers:</strong> 45</p>
-            </div>
-            <div class="icon-text">
-                <i class="fas fa-user-plus"></i>
-                <p><strong>Following:</strong> 30</p>
-            </div>
-            <a href="{% url 'myprofile' %}" class="btn btn-primary">Go to Profile</a>
-        </div>
-    </div>
-</div>

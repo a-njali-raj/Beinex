@@ -1,4 +1,7 @@
 {% load static %}
+{% include "layout/messages.html" %}
+
+    
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -24,6 +27,22 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+        }
+
+        /* Navigation Icon and Text */
+        .nav-icon-text {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            color: #03120f;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .nav-icon-text i {
+            margin-right: 10px;
         }
 
         /* Login Section Styles */
@@ -131,6 +150,11 @@
 </head>
 
 <body>
+
+    <!-- Navigation Icon and Text -->
+    <a href="{% url 'index' %}" class="nav-icon-text">
+        <i class="fas fa-arrow-left"></i> <b>MyBlog</b>
+    </a>
 
     <!--login start -->
     <section id="login" class="login">

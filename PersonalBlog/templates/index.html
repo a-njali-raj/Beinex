@@ -2,154 +2,122 @@
 <!DOCTYPE html>
 <html>
 
+
 <head>
   <!-- Basic -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <!-- Mobile Metas -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!-- Site Metas -->
-  
- 
-
-  <title>Myblog</title>
-
+  <title>MyBlog</title>
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{% static '/css/bootstrap.css' %}" />
   <!-- font awesome style -->
   <link href="{% static '/css/font-awesome.min.css' %}" rel="stylesheet" />
-
   <!-- Custom styles for this template -->
   <link href="{% static '/css/style.css' %}" rel="stylesheet" />
   <!-- responsive style -->
   <link href="{% static '/css/responsive.css' %}" rel="stylesheet" />
-  <!-- external-->
+  <!-- external -->
   <link href="{% static '/css/estyle.css' %}" rel="stylesheet" />
+  <style>
+      .navbar-nav {
+          display: flex;
+          align-items: center;
+      }
 
+      .navbar-nav .nav-item {
+          margin-right: 15px;
+      }
+
+      .navbar-nav .nav-link, .navbar-nav .btn {
+          padding: 8px 15px;
+          font-weight: 500;
+          border-radius: 5px;
+          text-transform: uppercase;
+          transition: color 0.3s, background-color 0.3s;
+      }
+
+      .navbar-nav .nav-link:hover, .navbar-nav .btn:hover {
+          color: #333;
+          background-color: #f7f7f7;
+          text-decoration: none;
+      }
+
+      .navbar-nav .profile-image {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-right: 10px;
+      }
+
+      .navbar-nav .profile-link {
+          display: flex;
+          align-items: center;
+      }
+  </style>
 </head>
 
 <body>
-
-  
-<section class="slider_section ">
-  <div id="customCarousel1" class="carousel slide">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <div class="container ">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="detail-box">
-                <h4>
-                 MyBlog
-                </h4>
-                <h1>
-                    Discover Stories, <br>
-                    Share Your Voice
-                </h1>
-               
-                <a href="login.html">
-                  GET STARTED
-                </a>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="img-box">
-                <img src="{% static '/images/herosectionimage2.jpg' %}" alt="">
-              </div>
-            </div>
+  <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+       <b>  <a class="navbar-brand" href="{% url 'index' %}">My Blog</a></b> 
+          <div class="collapse navbar-collapse">
+              <ul class="navbar-nav ml-auto">
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'user' %}">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="btn btn-light" href="{% url 'addpost' %}">
+                          <i class="fas fa-plus-circle"></i> Add New Post
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <span class="notification-icon" aria-label="Notifications">
+                          <i class="fas fa-bell"></i>
+                      </span>
+                  </li>
+                  {% if user.is_authenticated %}
+                  <li class="nav-item profile-link">
+                      {% if user.profile_pic %}
+                      <img src="{{ user.profile_pic.url }}" alt="Profile" class="profile-image">
+                      {% else %}
+                      <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-image">
+                      {% endif %}
+                      <a class="nav-link" href="{% url 'myprofile' %}">{{ user.username }}</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'login' %}">Login</a>
+                  </li>
+                  {% endif %}
+              </ul>
           </div>
-        </div>
       </div>
-      
-      
-      </div>
-    </div>
-  </div>
-</section>
-<!-- end slider section -->
+  </nav>
 
-  </div>
-
-
-  <!-- catagory section -->
-
-  <section class="catagory_section layout_padding">
-    <div class="catagory_container">
-      <div class="container ">
-        <div class="heading_container heading_center">
-          <h2>
-            Blog Categories
-          </h2>
-          <p>
-            There are many variations of blogs are available, choose your favourite one.
-          </p>
-        </div>
-        <div class="row justify-content-center">
-          
-          <div class="col-sm-6 col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="{% static '/images/cat2.png' %}" alt="">
+  <!-- Slider Section -->
+  <section class="slider_section">
+    <div id="customCarousel1" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="detail-box">
+                  <h4>MyBlog</h4>
+                  <h1>Discover Stories, <br> Share Your Voice</h1>
+                  <a href="{% url 'login' %}">GET STARTED</a>
+                </div>
               </div>
-              <div class="detail-box">
-                <h5>
-                  Science
-                </h5>
-                <p>
-                  fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                  
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="{% static '/images/cat3.png' %}" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  History
-                </h5>
-                <p>
-                  fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                
-                  
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="{% static '/images/cat4.png' %}" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Biography
-                </h5>
-                <p>
-                  fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                  
-                  
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-sm-6 col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="{% static '/images/cat6.png' %}" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Fantasy
-                </h5>
-                <p>
-                  fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                 
-                </p>
+              <div class="col-md-6">
+                <div class="img-box">
+                  <img src="{% static '/images/slider-img.png' %}" alt="">
+                </div>
               </div>
             </div>
           </div>
@@ -157,22 +125,103 @@
       </div>
     </div>
   </section>
+  <!-- end slider section -->
 
-  <!-- end catagory section -->
+ <!-- catagory section -->
 
-  
+ <section class="catagory_section layout_padding">
+  <div class="catagory_container">
+    <div class="container ">
+      <div class="heading_container heading_center">
+       <center> <h2>
+          Blog Categories
+        </h2>
+        <p>
+          There are many variations of blogs are available, choose your favourite one.
+        </p>
+        </center>
+      </div>
+      <div class="row justify-content-center">
+        
+        <div class="col-sm-6 col-md-4 ">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{% static '/images/cat2.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h5>
+                Science
+              </h5>
+              <p>
+                fact that a reader will be distracted by the readable content of a page when looking at its layout.
+                
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 ">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{% static '/images/cat3.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h5>
+                History
+              </h5>
+              <p>
+                fact that a reader will be distracted by the readable content of a page when looking at its layout.
+              
+                
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 ">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{% static '/images/cat4.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h5>
+                Biography
+              </h5>
+              <p>
+                fact that a reader will be distracted by the readable content of a page when looking at its layout.
+                
+                
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-sm-6 col-md-4 ">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{% static '/images/cat6.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h5>
+                Fantasy
+              </h5>
+              <p>
+                fact that a reader will be distracted by the readable content of a page when looking at its layout.
+               
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
- 
-
-  <!-- jQery -->
+<!-- end catagory section -->
+  <!-- jQuery -->
   <script src="{% static '/js/jquery-3.4.1.min.js' %}"></script>
   <!-- bootstrap js -->
   <script src="{% static '/js/bootstrap.js' %}"></script>
   <!-- custom js -->
   <script src="{% static '/js/custom.js' %}"></script>
-  
-  </script>
-  <!-- End Google Map -->
 
 </body>
 

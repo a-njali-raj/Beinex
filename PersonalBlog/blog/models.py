@@ -18,7 +18,7 @@ class Post(models.Model):
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tag=models.CharField(max_length=50,blank=True, null=True)
-    image = models.ImageField(upload_to='post_images/', blank=True, null=True)  # New image field
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)  
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_available = models.BooleanField(default=True)
