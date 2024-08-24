@@ -1,21 +1,57 @@
-
 {% extends "layout/base.html" %}
 {% load static %}
 
-{% block extra_css %}
-{% endblock %}
 {% block content %}
     <!-- Blog Posts -->
     <div class="container mt-4">
         <div class="row justify-content-center">
-            <!-- Post 1 -->
+            {% for post in posts %}
+            <!-- Post -->
             <div class="col-md-8">
                 <div class="post">
-                    <h2 class="post-title">Blog Post Title 1</h2>
-                    <p class="text-muted">Posted on August 22, 2024</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et vulputate commodo, eros purus lacinia purus, ac ultrices libero nunc ac est. Integer sagittis venenatis libero, vel sollicitudin nulla.</p>
-                    <p><strong>Tags:</strong> <a href="#" class="text-primary">Tag1</a>, <a href="#" class="text-primary">Tag2</a></p>
+                    <!-- Post Header -->
+                    <div class="post-header d-flex align-items-center">
+                        <div class="post-author d-flex align-items-center">
+                            <i class="fas fa-user-circle"></i> <!-- Symbol for username -->
+                            <span class="author-name">{{ post.author.username }}</span>
+                        </div>
+                        <p class="text-muted ml-3 post-date">Posted on {{ post.created_at }}</p>
+                    </div>
+                    <!-- Post Title -->
+                    <h2 class="post-title">{{ post.title }}</h2>
                     
+                    <!-- Post Image -->
+                    <div class="post-image-container">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid">
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Post Content -->
+                    <p>{{ post.content }}</p>
+                    
+                    <!-- Post Tags and Like Button -->
+                    <div class="post-footer d-flex justify-content-between align-items-center">
+                        <p><strong>Tags:</strong> 
+                            {% if post.split_tags %}
+                                {% for tag in post.split_tags %}
+                                    <a href="#" class="text-primary">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                No tags
+                            {% endif %}
+                        </p>
+
+                        <!-- Like Button -->
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-light like-button">
+                                <i class="fas fa-thumbs-up"></i> Like
+                                <span class="badge badge-secondary">{{ post.likes.count }}</span>
+                            </button>
+                        </form>
+                    </div>
+
                     <!-- Comments Section -->
                     <div class="comments-section">
                         <h4>Comments</h4>
@@ -37,10 +73,11 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
+{% endblock %}
 
-    {% endblock %}
+{% block extra_css %}
 
-    {% block extra_js %}
-    {% endblock %}
+{% endblock %}

@@ -55,9 +55,16 @@ def signup(request):
         return render(request,'signup.html')
     
 @never_cache
-@login_required(login_url='login') 
+@login_required(login_url='login')
 def user(request):
-    return render(request,'user.html')
+    posts = Post.objects.filter(is_available=True).order_by('-created_at')
+    for post in posts:
+        # Check if post.tag is not None before splitting
+        if post.tag:
+            post.split_tags = post.tag.split(",")
+        else:
+            post.split_tags = []
+    return render(request, 'user.html', {'posts': posts})
 
 @never_cache
 @login_required
@@ -160,3 +167,31 @@ def delete_post(request, post_id):
         post.is_available = False
         post.save()
         return redirect('myprofile')
+    
+@login_required
+def update_profile(request):
+    user = request.user
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        bio = request.POST.get('bio')
+
+        # Handle profile picture
+        if 'remove_profile_pic' in request.POST:
+            user.profile_pic.delete(save=False)  # Delete the file
+            user.profile_pic = None  # Set the profile_pic field to None
+
+        elif 'profile_pic' in request.FILES:
+            profile_pic = request.FILES['profile_pic']
+            user.profile_pic = profile_pic
+
+        user.username = username
+        user.email = email
+        user.bio = bio
+        
+        user.save()
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('myprofile')  # Redirect to the profile page or another page after update
+
+    return render(request, 'updateprofile.html', {'user': user})

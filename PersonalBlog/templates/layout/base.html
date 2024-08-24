@@ -8,142 +8,232 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body {
-            background-color: #f0f2f5;
-            color: #333;
-            padding-top: 60px; /* Space for the fixed navbar */
-        }
-        .navbar {
-            margin-bottom: 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1030;
-            background-color: #ffffff;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .navbar-nav {
-            margin-left: auto;
-        }
-        .profile-header {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .profile-header h1 {
-            margin: 0;
-        }
-        .post {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .post-title {
-            margin-bottom: 10px;
-            color: #007bff;
-        }
-        .post p {
-            line-height: 1.6;
-        }
-        .comments-section {
-            margin-top: 20px;
-            border-top: 1px solid #dee2e6;
-            padding-top: 10px;
-        }
-        .comments-section .media {
-            margin-bottom: 10px;
-        }
-        .comments-section .media img {
-            border-radius: 50%;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
-        .card {
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            font-size: 1.25rem;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-body .icon-text {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .card-body .icon-text i {
-            font-size: 1.5rem;
-            color: #007bff;
-            margin-right: 10px;
-        }
-        .card-body .icon-text p {
-            margin: 0;
-        }
-        .card-body .btn {
-            width: 100%;
-            margin-top: 10px;
-        }
-        .menu-toggle {
-            cursor: pointer;
-            font-size: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 30px;
-            height: 30px;
-            background: transparent;
-            border: none;
-            margin-left: 15px; /* Space between logout and menu icon */
-        }
-        .menu-toggle .bar {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background-color: #007bff;
-            margin: 3px 0;
-        }
-        .notification-icon {
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: #007bff;
-            margin-left: 15px; /* Space between logout and notification icon */
-        }
-        .notification-icon:hover {
-            color: #0056b3;
-        }
-        .sidebar {
-            display: none;
-            position: fixed;
-            top: 60px;
-            right: 0;
-            width: 250px;
-            background-color: #ffffff;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-            height: calc(100% - 60px);
-            overflow-y: auto;
-            z-index: 1020;
-            padding: 20px;
-        }
-        .sidebar.show {
-            display: block;
-        }
+        /* General Styles */
+/* General Styles */
+body {
+    background-color: #f0f2f5;
+    color: #333;
+    padding-top: 60px; /* Space for the fixed navbar */
+}
+
+.navbar {
+    margin-bottom: 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1030;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.profile-header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-header h1 {
+    margin: 0;
+}
+
+.post {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.post-title {
+    margin-bottom: 10px;
+    color: #0a0a0b;
+}
+
+.post p {
+    line-height: 1.6;
+}
+
+.comments-section {
+    margin-top: 20px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 10px;
+}
+
+.comments-section .media {
+    margin-bottom: 10px;
+}
+
+.comments-section .media img {
+    border-radius: 50%;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-body .icon-text {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.card-body .icon-text i {
+    font-size: 1.5rem;
+    color: #007bff;
+    margin-right: 10px;
+}
+
+.card-body .icon-text p {
+    margin: 0;
+}
+
+.card-body .btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.menu-toggle {
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    margin-left: 15px; /* Space between logout and menu icon */
+}
+
+.menu-toggle .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #007bff;
+    margin: 3px 0;
+}
+
+.notification-icon {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #007bff;
+    margin-left: 15px; /* Space between logout and notification icon */
+}
+
+.notification-icon:hover {
+    color: #0056b3;
+}
+
+.sidebar {
+    display: none;
+    position: fixed;
+    top: 60px;
+    right: 0;
+    width: 250px;
+    background-color: #ffffff;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    z-index: 1020;
+    padding: 20px;
+}
+
+.sidebar.show {
+    display: block;
+}
+
+/* Post Image Container */
+.post-image-container {
+    margin-bottom: 20px;
+    text-align: center; /* Center align the image */
+}
+
+.post-image-container img {
+    width: 100%; /* Make the image take the full width of the container */
+    max-width: 500px; /* Set a maximum width to control how large the image can get */
+    height: auto; /* Maintain the aspect ratio */
+    border-radius: 5px;
+}
+
+/* Post Footer */
+.post-footer {
+    margin-top: 20px;
+}
+
+.post-footer p {
+    margin-bottom: 0;
+}
+
+.post-footer .btn {
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.post-author {
+    display: flex;
+    align-items: center;
+}
+
+.post-author i {
+    font-size: 2rem; /* Adjust size of the icon */
+    color: #131414; /* Color of the icon */
+    margin-right: 10px;
+}
+
+.author-name {
+    font-size: 1.2rem; /* Adjust the size as needed */
+    color: #333; /* Color for the author name */
+}
+
+.post-date {
+    font-size: 1rem; /* Adjust size as needed */
+    color: #777; /* Color for the date */
+}
+
+.post-title {
+    font-size: 2rem; /* Adjust the size as needed */
+    color: #0a0a0a; /* Color for the post title */
+    margin-bottom: 20px; /* Adjust margin if necessary */
+}
+
+
     </style>
     {% block extra_css %}
     {% endblock %}

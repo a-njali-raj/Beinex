@@ -1,0 +1,48 @@
+{% extends "layout/base.html" %}
+{% block extra_css %}
+<style>
+    /* Add your custom styles here */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Update Profile</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea class="form-control" id="bio" name="bio" rows="3">{{ user.bio }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="profile_pic">Profile Picture</label>
+            <input type="file" class="form-control-file" id="profile_pic" name="profile_pic">
+            {% if user.profile.image %}
+            <div class="mt-2">
+                <img src="{{ user.profile.image.url }}" alt="Current Profile Image" style="width: 100px; height: 100px; object-fit: cover;">
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="remove_profile_pic">Remove Profile Picture</label>
+            <input type="checkbox" id="remove_profile_pic" name="remove_profile_pic">
+            <small class="form-text text-muted">Check this box to remove your current profile picture.</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+</div>
+{% endblock %}

@@ -94,7 +94,7 @@
         function validateImage() {
             const file = imageInput.files[0];
             if (file) {
-                const allowedTypes = ['image/png', 'image/jpeg'];
+                const allowedTypes = ['image/png','image/jpeg','image/webp'];
                 if (!allowedTypes.includes(file.type)) {
                     imageError.textContent = 'Image must be in PNG or JPEG format.';
                     return false;
