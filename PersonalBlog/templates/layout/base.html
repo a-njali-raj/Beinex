@@ -291,7 +291,47 @@ body {
     background-color: rgba(234, 169, 175, 0.8); /* Red with transparency */
     color: #060505;
 }
+/* Adjust the position of the search button slightly to the left */
+.navbar .form-inline button {
+    margin-left: -10px; /* Adjust this value to move the button more to the left if needed */
+    background: none;
+    border: none;
+    color: #070707; /* Color of the search icon */
+    padding: 5px 10px; /* Adjust padding as needed */
+}
 
+/* Ensure the input field and button align properly */
+.navbar .form-inline {
+    display: flex;
+    align-items: center;
+}
+
+/* Increase the space between the Home button and the search form */
+.navbar-nav .nav-item + .form-inline {
+    margin-left: 20px; /* Adjust this value to increase the spacing */
+}
+
+/* Styling the search input field */
+.navbar .form-inline .form-control {
+    background-color: transparent; /* Transparent background */
+    color: #0b0a0a; /* Text color */
+    border: 1px solid #242323; /* Border color */
+    padding-right: 30px; /* Extra padding to make space for the icon */
+}
+
+/* Hover effect for the input field */
+.navbar .form-inline .form-control:hover,
+.navbar .form-inline .form-control:focus {
+    border-color: #61aefc;  /* Border color on hover/focus */
+    box-shadow: none; /* Remove default shadow */
+    outline: black; /* Remove default outline */
+}
+
+/* Optional: Hover effect for the search icon button */
+.navbar .form-inline button:hover {
+    color: #61aefc; /* Change color on hover */
+    cursor: pointer;
+}
 
 /* Responsive Design */
 @media (max-width: 767px) {

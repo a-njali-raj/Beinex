@@ -4,7 +4,7 @@ from django.contrib import messages,auth
 from django.contrib.auth import authenticate, login
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
-
+from .forms import CommentForm
 
 from .models import User,Post
 
@@ -59,11 +59,14 @@ def signup(request):
 def user(request):
     posts = Post.objects.filter(is_available=True).order_by('-created_at')
     for post in posts:
-        # Check if post.tag is not None before splitting
         if post.tag:
             post.split_tags = post.tag.split(",")
         else:
             post.split_tags = []
+        
+        
+        post.comments_list = post.comments.all()  
+    
     return render(request, 'user.html', {'posts': posts})
 
 @never_cache
@@ -109,6 +112,7 @@ def post_create(request):
 
 
 @login_required
+@never_cache
 def myprofile(request):
     user = request.user
     # Fetch the posts of the logged-in user
@@ -138,6 +142,7 @@ def myprofile(request):
 
 
 @login_required
+@never_cache
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -161,6 +166,7 @@ def edit_post(request, post_id):
     return render(request, 'editpost.html', {'post': post})
 
 @login_required
+@never_cache
 def delete_post(request, post_id):
     if request.method == 'GET':
         post = get_object_or_404(Post, id=post_id, author=request.user)
@@ -169,6 +175,7 @@ def delete_post(request, post_id):
         return redirect('myprofile')
     
 @login_required
+@never_cache
 def update_profile(request):
     user = request.user
 
@@ -195,3 +202,42 @@ def update_profile(request):
         return redirect('myprofile')  # Redirect to the profile page or another page after update
 
     return render(request, 'updateprofile.html', {'user': user})
+
+@login_required
+@never_cache
+def search_results(request):
+    query = request.GET.get('q')
+    posts = Post.objects.filter(tag__icontains=query) | Post.objects.filter(author__username__icontains=query,is_available=True)
+    users = User.objects.filter(username__icontains=query)
+
+    # Preprocess tags
+    for post in posts:
+        if post.tag:  # Ensure the tag is not None
+            post.split_tags = post.tag.split(',')
+        else:
+            post.split_tags = []  # Provide an empty list if no tags are present
+
+    return render(request, 'search_results.html', {'posts': posts, 'users': users, 'query': query})
+
+
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = post.comments.all()
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            form = CommentForm()  # Clear the form after submission
+    else:
+        form = CommentForm()
+    
+    context = {
+        'post': post,
+        'comments': comments,
+        'form': form,
+    }
+    return render(request, 'post_detail.html', context)

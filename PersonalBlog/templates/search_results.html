@@ -1,0 +1,105 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block content %}
+    <!-- Search Results -->
+    <div class="container mt-4">
+        <h4>Search Results for "{{ query }}"</h4>
+        
+        <!-- Blog Posts -->
+        {% if posts %}
+            <div class="row justify-content-center">
+                {% for post in posts %}
+                <!-- Post -->
+                <div class="col-md-8 mb-4">
+                    <div class="post">
+                        <!-- Post Header -->
+                        <div class="post-header d-flex align-items-center">
+                            <div class="post-author d-flex align-items-center">
+                                <i class="fas fa-user-circle"></i> <!-- Symbol for username -->
+                                <span class="author-name">{{ post.author.username }}</span>
+                            </div>
+                            <p class="text-muted ml-3 post-date">Posted on {{ post.created_at }}</p>
+                        </div>
+                        <!-- Post Title -->
+                        <h2 class="post-title">{{ post.title }}</h2>
+                        
+                        <!-- Post Image -->
+                        <div class="post-image-container">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid">
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Post Content -->
+                        <p>{{ post.content }}</p>
+                        
+                        <!-- Post Tags and Like Button -->
+                        <div class="post-footer d-flex justify-content-between align-items-center">
+                            <p><strong>Tags:</strong> 
+                                {% if post.split_tags %}
+                                    {% for tag in post.split_tags %}
+                                        <a href="#" class="text-primary">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    No tags
+                                {% endif %}
+                            </p>
+                            
+                            <!-- Like Button -->
+                            <form method="post" action="">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-light like-button">
+                                    <i class="fas fa-thumbs-up"></i> Like
+                                    <span class="badge badge-secondary">{{ post.likes.count }}</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Comments Section -->
+                        <div class="comments-section mt-4">
+                            <h4>Comments</h4>
+                            <form method="post" action="">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="3" placeholder="Add a comment..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Post Comment</button>
+                            </form>
+                            <div class="mt-3">
+                                {% for comment in post.comments.all %}
+                                    <div class="media">
+                                        <img class="mr-3" src="{{ comment.author.profile_pic.url }}" alt="{{ comment.author.username }}" width="64" height="64">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{ comment.author.username }}</h5>
+                                            {{ comment.content }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No posts found.</p>
+        {% endif %}
+
+        <!-- User Search Results -->
+        {% if users %}
+            <h3>Users</h3>
+            <ul>
+                {% for user in users %}
+                    <li>{{ user.username }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <!-- Additional CSS specific to this page can be added here -->
+{% endblock %}
