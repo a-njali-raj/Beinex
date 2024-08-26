@@ -1,10 +1,11 @@
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib import messages,auth
 from django.contrib.auth import authenticate, login
+from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
-from .forms import CommentForm
+from .forms import CommentForm,FollowForm
 
 from .models import User,Post,Like
 
@@ -223,7 +224,10 @@ def search_results(request):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()
-    
+
+    # Process tags
+    tags = [tag.strip() for tag in post.tag.split(",")] if post.tag else []
+
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -239,22 +243,59 @@ def post_detail(request, post_id):
         'post': post,
         'comments': comments,
         'form': form,
+        'tags': tags,
     }
     return render(request, 'post_detail.html', context)
 
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     
-    # Check if user is authenticated
+    # Check if the user is authenticated
     if request.user.is_authenticated:
         # Check if the user has already liked the post
-        if Like.objects.filter(post=post, user=request.user).exists():
+        liked = Like.objects.filter(post=post, user=request.user).exists()
+        
+        if liked:
             # If the user has already liked the post, remove the like
             Like.objects.filter(post=post, user=request.user).delete()
+            liked = False
         else:
             # If the user hasn't liked the post yet, add the like
             Like.objects.create(post=post, user=request.user)
+            liked = True
+            
+        # Return JSON response to update the like button
+        return JsonResponse({
+            'liked': liked,
+            'likes_count': post.likes.count(),
+        })
     
-    # Redirect to the same page
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    # If not authenticated, redirect to login
+    return HttpResponseRedirect(reverse('login'))
+def follow_toggle(request, user_id):
+    user_to_follow = get_object_or_404(User, id=user_id)
+    form = FollowForm(request.POST or None, current_user=request.user, initial={'user_to_follow': user_to_follow})
 
+    if form.is_valid():
+        # Save the follow relationship
+        is_following = form.save()
+
+        # Return the status of the follow action
+        return JsonResponse({'following': is_following})
+
+    # If form is not valid, return an error response
+    return JsonResponse({'error': 'Invalid request.'}, status=400)
+
+def validate_username(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    return JsonResponse(data)
+
+def validate_email(request):
+    email = request.GET.get('email', None)
+    data = {
+        'is_taken': User.objects.filter(email__iexact=email).exists()
+    }
+    return JsonResponse(data)
