@@ -1,12 +1,56 @@
 {% extends "layout/base.html" %}
 
+{% block extra_css %}
+<style>
+    .like-button.liked {
+        color: white; /* Text color */
+        background-color: blue; /* Background color when liked */
+        border-color: blue; /* Border color when liked */
+    }
+
+    .post-title-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .post-title-container h2 {
+        margin: 0;
+    }
+
+    .edit-icon, .delete-icon {
+        color: #000; /* Icon color */
+        font-size: 1.2em; /* Icon size */
+        margin-left: 10px; /* Space between icons */
+        text-decoration: none; /* Remove underline */
+    }
+
+    .edit-icon:hover, .delete-icon:hover {
+        color: #007bff; /* Color on hover */
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <!-- Post Details -->
             <div class="post">
-                <h2>{{ post.title }}</h2>
+                <div class="post-title-container">
+                    <h2>{{ post.title }}</h2>
+                    {% if user.is_authenticated and user == post.author %}
+                        <!-- Edit and Delete Icons -->
+                        <div>
+                            <a href="{% url 'edit_post' post.id %}" class="edit-icon" title="Edit">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a href="{% url 'delete_post' post.id %}" class="delete-icon" title="Delete" onclick="return confirm('Are you sure you want to delete this post?');">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
                 <p class="text-muted">Posted by {{ post.author.username }} on {{ post.created_at }}</p>
                 
                 <!-- Post Image -->
@@ -17,17 +61,34 @@
                 <!-- Post Content -->
                 <p>{{ post.content }}</p>
 
-                <!-- Post Tags -->
-                <p><strong>Tags:</strong> 
-                    {% if post.tags.all %}
-                        {% for tag in post.tags.all %}
-                            <a href="#" class="text-primary">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        No tags
-                    {% endif %}
-                </p>
+                <!-- Post Tags and Like Button -->
+                <div class="post-footer d-flex justify-content-between align-items-center">
+                    <p><strong>Tags:</strong> 
+                        {% if tags %}
+                            {% for tag in tags %}
+                                <a href="#" class="text-primary">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            No tags
+                        {% endif %}
+                    </p>
 
+                    <!-- Like Button -->
+                    <form method="post" action="{% url 'like_post' post.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn like-button {% if request.user in post.likes.all %}liked{% endif %}">
+                            <i class="fas fa-thumbs-up"></i> 
+                            {% if request.user in post.likes.all %}
+                                Unlike
+                            {% else %}
+                                Like
+                            {% endif %}
+                            <span class="badge badge-secondary">{{ post.likes.count }}</span>
+                        </button>
+                    </form>
+                    
+                </div>
+               
                 <!-- Comments Section -->
                 <div class="comments-section mt-4">
                     <h4>Comments</h4>
@@ -95,6 +156,30 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            let form = this.closest('form');
+            let postId = form.getAttribute('action').split('/').slice(-2, -1)[0];
+            
+            fetch(form.getAttribute('action'), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+            }).then(response => response.json()).then(data => {
+                if (data.liked) {
+                    button.classList.add('liked');
+                } else {
+                    button.classList.remove('liked');
+                }
+                button.querySelector('.badge').textContent = data.likes_count;
+            });
+        });
+    });
+});
     function toggleComments() {
         var commentsDiv = document.getElementById('comments');
         var button = commentsDiv.previousElementSibling;

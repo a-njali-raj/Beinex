@@ -165,11 +165,13 @@
                                 <label for="username">Username</label>
                                 <input type="text" id="username" name="username" class="form-control" required>
                                 <div id="username-error" class="error-message"></div>
+                                <span id="usernameError" style="color:rgb(221, 119, 23); display:none;"></span>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" id="email" name="email" class="form-control" required>
                                 <div id="email-error" class="error-message"></div>
+                                <span id="emailError" style="color:rgb(221, 119, 23); display:none;"></span>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
@@ -189,6 +191,81 @@
             </div>
         </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to check if form is valid
+            function checkFormValidity() {
+                const usernameError = $('#usernameError').is(':visible');
+                const emailError = $('#emailError').is(':visible');
+                $('#register-form button[type="submit"]').prop('disabled', usernameError || emailError);
+            }
+        
+            // Username validation
+            $('#username').on('input', function() {
+                var username = $(this).val();
+                if (username) {
+                    $.ajax({
+                        url: '/validate-username/',
+                        data: {
+                            'username': username
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.is_taken) {
+                                $('#usernameError').text('This username is already taken.').show();
+                            } else {
+                                $('#usernameError').hide();
+                            }
+                            checkFormValidity();
+                        }
+                    });
+                } else {
+                    $('#usernameError').hide();
+                    checkFormValidity();
+                }
+            });
+        
+            // Email validation
+            $('#email').on('input', function() {
+                var email = $(this).val();
+                if (email) {
+                    $.ajax({
+                        url: '/validate-email/',
+                        data: {
+                            'email': email
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.is_taken) {
+                                $('#emailError').text('This email is already registered.').show();
+                            } else {
+                                $('#emailError').hide();
+                            }
+                            checkFormValidity();
+                        }
+                    });
+                } else {
+                    $('#emailError').hide();
+                    checkFormValidity();
+                }
+            });
+        
+            // Prevent form submission if there are validation errors
+            $('#register-form').on('submit', function(event) {
+                const usernameError = $('#usernameError').is(':visible');
+                const emailError = $('#emailError').is(':visible');
+                if (usernameError || emailError) {
+                    event.preventDefault(); // Prevent form submission
+                    alert('Please correct the errors before submitting the form.');
+                }
+            });
+    
+            // Initial form validity check on page load
+            checkFormValidity();
+        });
+    </script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", () => {
     const usernameInput = document.getElementById("username");

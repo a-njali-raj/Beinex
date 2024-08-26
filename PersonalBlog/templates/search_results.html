@@ -47,7 +47,7 @@
                             </p>
                             
                             <!-- Like Button -->
-                            <form method="post" action="">
+                            <form method="post" action="{% url 'like_post' post.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-light like-button">
                                     <i class="fas fa-thumbs-up"></i> Like

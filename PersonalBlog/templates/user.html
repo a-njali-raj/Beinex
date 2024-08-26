@@ -32,6 +32,12 @@
 .follow-button:hover {
     background-color: #e2e6ea; /* Hover background color */
 }
+.like-button.liked {
+    color: white; /* Text color */
+    background-color: blue; /* Background color when liked */
+    border-color: blue; /* Border color when liked */
+}
+
 </style>
 {% endblock %}
 
@@ -51,9 +57,9 @@
                             <!-- Follow Button -->
                             {% if request.user.is_authenticated %}
                                 {% if request.user != post.author %}
-                                    <!-- Only show follow button if the logged-in user is not the author of the post -->
-                                    <form method="post" action="" style="display: inline;">
+                                    <form method="post" action="{% url 'follow_toggle' post.author.id %}" class="follow-form" data-user-id="{{ post.author.id }}">
                                         {% csrf_token %}
+                                        <input type="hidden" name="user_to_follow" value="{{ post.author.id }}">
                                         <button type="submit" class="follow-button {% if request.user in post.author.followers.all %}following{% endif %}">
                                             {% if request.user in post.author.followers.all %}
                                                 Unfollow
@@ -63,6 +69,9 @@
                                         </button>
                                     </form>
                                 {% endif %}
+                            {% else %}
+                                <!-- Optional message or button for non-authenticated users -->
+                                <p><a href="{% url 'login' %}" class="btn btn-primary">Login to Follow</a></p>
                             {% endif %}
                         </div>
 
@@ -182,6 +191,31 @@
     <!-- jQuery for toggling comments -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            let form = this.closest('form');
+            let postId = form.getAttribute('action').split('/').slice(-2, -1)[0];
+            
+            fetch(form.getAttribute('action'), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+            }).then(response => response.json()).then(data => {
+                if (data.liked) {
+                    button.classList.add('liked');
+                } else {
+                    button.classList.remove('liked');
+                }
+                button.querySelector('.badge').textContent = data.likes_count;
+            });
+        });
+    });
+});
+
         $(document).ready(function() {
             $('.btn-link').click(function() {
                 var postId = $(this).data('post-id');

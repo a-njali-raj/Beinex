@@ -148,7 +148,8 @@
                     {% if post_with_tags.post.image %}
                     <img src="{{ post_with_tags.post.image.url }}" alt="Post Image">
                     {% endif %}
-                    <h5>{{ post_with_tags.post.title }}
+                    <h5>
+                        <a href="{% url 'post_detail' post_with_tags.post.id %}" class="text-decoration-none">{{ post_with_tags.post.title }}</a>
                         <span class="post-actions">
                             <a href="{% url 'edit_post' post_with_tags.post.id %}" class="edit-icon" title="Edit">
                                 <i class="fas fa-pencil-alt"></i>
@@ -165,6 +166,7 @@
                         <span class="badge badge-primary">{{ tag }}</span>
                         {% endfor %}
                     </div>
+                    
                 </div>
                 {% empty %}
                 <p>No posts yet.</p>
