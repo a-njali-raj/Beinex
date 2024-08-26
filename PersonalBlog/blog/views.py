@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib import messages,auth
 from django.contrib.auth import authenticate, login
@@ -6,7 +6,7 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 from .forms import CommentForm
 
-from .models import User,Post
+from .models import User,Post,Like
 
 # Create your views here.
 def index(request):
@@ -241,3 +241,20 @@ def post_detail(request, post_id):
         'form': form,
     }
     return render(request, 'post_detail.html', context)
+
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    
+    # Check if user is authenticated
+    if request.user.is_authenticated:
+        # Check if the user has already liked the post
+        if Like.objects.filter(post=post, user=request.user).exists():
+            # If the user has already liked the post, remove the like
+            Like.objects.filter(post=post, user=request.user).delete()
+        else:
+            # If the user hasn't liked the post yet, add the like
+            Like.objects.create(post=post, user=request.user)
+    
+    # Redirect to the same page
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+

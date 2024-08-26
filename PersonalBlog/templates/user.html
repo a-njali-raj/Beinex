@@ -1,5 +1,39 @@
 {% extends "layout/base.html" %}
 {% load static %}
+{% block extra_css %}
+<style>
+/* Add these styles in your CSS file */
+.post-author {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Ensure the div takes full width for proper alignment */
+}
+
+.author-name {
+    margin-right: 10px; /* Space between author name and button */
+    font-weight: bold; /* Make the author's name bold */
+}
+
+.follow-button {
+    color: black; /* Default color */
+    border: 1px solid #ccc; /* Border to make it look like a button */
+    background-color: #f8f9fa; /* Light background for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 14px; /* Adjust font size if needed */
+    padding: 5px 10px; /* Add some padding */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.follow-button.following {
+    color: green; /* Color when following */
+    border-color: green; /* Border color when following */
+}
+
+.follow-button:hover {
+    background-color: #e2e6ea; /* Hover background color */
+}
+</style>
+{% endblock %}
 
 {% block content %}
     <!-- Blog Posts -->
@@ -11,10 +45,27 @@
                 <div class="post">
                     <!-- Post Header -->
                     <div class="post-header d-flex align-items-center">
-                        <div class="post-author d-flex align-items-center">
+                        <div class="post-author d-flex align-items-center flex-grow-1">
                             <i class="fas fa-user-circle"></i> <!-- Symbol for username -->
                             <span class="author-name">{{ post.author.username }}</span>
+                            <!-- Follow Button -->
+                            {% if request.user.is_authenticated %}
+                                {% if request.user != post.author %}
+                                    <!-- Only show follow button if the logged-in user is not the author of the post -->
+                                    <form method="post" action="" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="follow-button {% if request.user in post.author.followers.all %}following{% endif %}">
+                                            {% if request.user in post.author.followers.all %}
+                                                Unfollow
+                                            {% else %}
+                                                Follow
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
                         </div>
+
                         <p class="text-muted ml-3 post-date">Posted on {{ post.created_at }}</p>
                     </div>
 
@@ -46,13 +97,19 @@
                         </p>
 
                         <!-- Like Button -->
-                        <form method="post" action="">
+                        <form method="post" action="{% url 'like_post' post.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-light like-button">
-                                <i class="fas fa-thumbs-up"></i> Like
+                            <button type="submit" class="btn like-button {% if request.user in post.likes.all %}liked{% endif %}">
+                                <i class="fas fa-thumbs-up"></i> 
+                                {% if request.user in post.likes.all %}
+                                    Unlike
+                                {% else %}
+                                    Like
+                                {% endif %}
                                 <span class="badge badge-secondary">{{ post.likes.count }}</span>
                             </button>
                         </form>
+                        
                     </div>
 
                     <!-- Comments Section -->
@@ -142,8 +199,4 @@
             });
         });
     </script>
-{% endblock %}
-
-{% block extra_css %}
-
 {% endblock %}

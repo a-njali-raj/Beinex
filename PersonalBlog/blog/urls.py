@@ -18,5 +18,6 @@ urlpatterns = [
     path('update-profile/', views.update_profile, name='update_profile'),
     path('search_results.html', views.search_results, name='search_results'),
     path('post/<int:post_id>/', views.post_detail, name='post_detail'),
-
+    path('post/<int:post_id>/like/', views.like_post, name='like_post'),
+    
     ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
