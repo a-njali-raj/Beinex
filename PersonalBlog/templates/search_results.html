@@ -29,10 +29,10 @@
         {% if posts %}
             <div class="row justify-content-center">
                 {% for post in posts %}
-                
+              
                 <div class="col-md-8 mb-4">
                     <div class="post">
-                        <!-- Post Header -->
+                     
                         <div class="post-header d-flex align-items-center">
                             <div class="post-author d-flex align-items-center">
                                 <i class="fas fa-user-circle"></i> 
@@ -53,17 +53,16 @@
                         <h3 class="post-title">
                             <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
                         </h3>
-                        <!-- Post Image -->
+                      
                         <div class="post-image-container">
                             {% if post.image %}
                                 <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid">
                             {% endif %}
                         </div>
-                        
-                        <!-- Post Content -->
+                    
                         <p>{{ post.content }}</p>
                         
-                        <!-- Post Tags and Like Button -->
+                        
                         <div class="post-footer d-flex justify-content-between align-items-center">
                             <p><strong>Tags:</strong> 
                                 {% if post.split_tags %}
@@ -75,7 +74,7 @@
                                 {% endif %}
                             </p>
                             
-                            <!-- Like Button -->
+                           
                             <form method="post" action="{% url 'like_post' post.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-light like-button">
@@ -85,7 +84,7 @@
                             </form>
                         </div>
 
-                        <!-- Comments Section -->
+                        
                         <div class="comments-section mt-4">
                             <h4>Comments</h4>
                             <form method="post" action="">
@@ -115,7 +114,7 @@
             <p>No posts found.</p>
         {% endif %}
 
-        <!-- User Search Results -->
+       
         {% if users %}
             <h3>Users</h3>
             <ul>

@@ -200,7 +200,7 @@ def update_profile(request):
 @login_required(login_url='login')
 def search_results(request):
     query = request.GET.get('q')
-    posts = Post.objects.filter(tag__icontains=query) | Post.objects.filter(author__username__icontains=query,is_available=True)
+    posts = Post.objects.filter(tag__icontains=query,is_available=True) | Post.objects.filter(author__username__icontains=query,is_available=True)
     users = User.objects.filter(username__icontains=query)
 
     
