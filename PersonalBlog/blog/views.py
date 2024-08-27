@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
-from .forms import CommentForm,FollowForm
+from .forms import CommentForm
 
 from .models import User,Post,Like
 
@@ -16,29 +16,29 @@ def index(request):
 @never_cache
 def loginn(request):
     if request.method == 'POST':
-        username=request.POST['username']
-        password=request.POST['password']
+        username = request.POST['username']
+        password = request.POST['password']
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             login(request, user)
-            request.session['username']=user.username
+            request.session['username'] = user.username
+            
             if user.is_superuser:
                 messages.success(request, "Login successful.")
                 return redirect("admin")
-            elif user.is_staff:
-                return redirect("staff_dashboard")
             
             messages.success(request, "Login successful.")
             return redirect("user")
             
         else:
-            messages.error(
-                request, "Invalid username or password"
-            )  # Add an error message
-            return redirect("login")  
-    response = render(request,"login.html")
-    response['Cache-Control'] = 'no-store,must-revalidate'
+            messages.error(request, "Invalid username or password")
+            return redirect("login")
+    
+    response = render(request, "login.html")
+    response['Cache-Control'] = 'no-store, must-revalidate'
     return response
+
 
 @never_cache
 def signup(request):
@@ -53,6 +53,7 @@ def signup(request):
     
     else:
         return render(request,'signup.html')
+    
     
 @never_cache
 @login_required(login_url='login')
@@ -90,9 +91,8 @@ def post_create(request):
         content = request.POST.get('content')
         tags = request.POST.get('tags')
         image = request.FILES.get('image')
-        author = request.user  # Set the current user as the author
-        
-        # Create a new Post object
+        author = request.user  
+
         post = Post(
             title=title,
             content=content,
@@ -115,10 +115,7 @@ def post_create(request):
 @login_required(login_url='login')
 def myprofile(request):
     user = request.user
-    # Fetch the posts of the logged-in user
     posts = Post.objects.filter(author=user,is_available=True).order_by('-created_at')
-    
-    # Split the tags in the view and pass them to the context
     posts_with_tags = []
     for post in posts:
         post_tags = post.tag.split(",") if post.tag else []
@@ -127,14 +124,16 @@ def myprofile(request):
             'tags': post_tags
         })
 
-    followers_count = user.followed_by.count()  # The number of users following this user
-    following_count = user.follows.count()  # The number of users this user is following
+    followers_count = user.followed_by.count()  
+    following_count = user.follows.count()  
+    posts_count = posts.count()  
 
     context = {
         'user': user,
         'posts_with_tags': posts_with_tags,
         'followers_count': followers_count,
         'following_count': following_count,
+        'posts_count': posts_count, 
     }
     return render(request, 'myprofile.html', context)
 
@@ -150,19 +149,17 @@ def edit_post(request, post_id):
         content = request.POST.get('content')
         tags = request.POST.get('tags')
         image = request.FILES.get('image')
-
-        # Update the post
         post.title = title
         post.content = content
         post.tag = tags
         if image:
             post.image = image
         post.save()
-
-        # Redirect to profile page
         return redirect('myprofile')
 
     return render(request, 'editpost.html', {'post': post})
+
+
 @never_cache
 @login_required(login_url='login')
 def delete_post(request, post_id):
@@ -181,11 +178,9 @@ def update_profile(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         bio = request.POST.get('bio')
-
-        # Handle profile picture
         if 'remove_profile_pic' in request.POST:
-            user.profile_pic.delete(save=False)  # Delete the file
-            user.profile_pic = None  # Set the profile_pic field to None
+            user.profile_pic.delete(save=False)  
+            user.profile_pic = None 
 
         elif 'profile_pic' in request.FILES:
             profile_pic = request.FILES['profile_pic']
@@ -197,9 +192,10 @@ def update_profile(request):
         
         user.save()
         messages.success(request, 'Profile updated successfully!')
-        return redirect('myprofile')  # Redirect to the profile page or another page after update
+        return redirect('myprofile')  
 
     return render(request, 'updateprofile.html', {'user': user})
+
 @never_cache
 @login_required(login_url='login')
 def search_results(request):
@@ -207,21 +203,19 @@ def search_results(request):
     posts = Post.objects.filter(tag__icontains=query) | Post.objects.filter(author__username__icontains=query,is_available=True)
     users = User.objects.filter(username__icontains=query)
 
-    # Preprocess tags
+    
     for post in posts:
-        if post.tag:  # Ensure the tag is not None
+        if post.tag:  
             post.split_tags = post.tag.split(',')
         else:
-            post.split_tags = []  # Provide an empty list if no tags are present
-
+            post.split_tags = []  
     return render(request, 'search_results.html', {'posts': posts, 'users': users, 'query': query})
+
 @never_cache
 @login_required(login_url='login')
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()
-
-    # Process tags
     tags = [tag.strip() for tag in post.tag.split(",")] if post.tag else []
 
     if request.method == 'POST':
@@ -231,7 +225,7 @@ def post_detail(request, post_id):
             comment.post = post
             comment.author = request.user
             comment.save()
-            form = CommentForm()  # Clear the form after submission
+            form = CommentForm()  
     else:
         form = CommentForm()
     
@@ -247,28 +241,24 @@ def post_detail(request, post_id):
 @login_required(login_url='login')
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    
-    # Check if the user is authenticated
     if request.user.is_authenticated:
-        # Check if the user has already liked the post
         liked = Like.objects.filter(post=post, user=request.user).exists()
         
         if liked:
-            # If the user has already liked the post, remove the like
             Like.objects.filter(post=post, user=request.user).delete()
             liked = False
         else:
-            # If the user hasn't liked the post yet, add the like
+           
             Like.objects.create(post=post, user=request.user)
             liked = True
             
-        # Return JSON response to update the like button
+        
         return JsonResponse({
             'liked': liked,
             'likes_count': post.likes.count(),
         })
     
-    # If not authenticated, redirect to login
+    
     return HttpResponseRedirect(reverse('login'))
 
 
@@ -299,17 +289,16 @@ def follow_toggle(request, user_id):
             followed = True
         return JsonResponse({'followed': followed})
     return JsonResponse({'error': 'Cannot follow yourself'}, status=400)
+
+
 @never_cache
 @login_required(login_url='login')
 def user_list_view(request, username, list_type):
     user = get_object_or_404(User, username=username)
-    
     if list_type == 'following':
-        # Users that the current user is following
         users_list = user.follows.all()
         title = f'{username}\'s Following'
     elif list_type == 'followers':
-        # Users that are following the current user
         users_list = user.followed_by.all()
         title = f'{username}\'s Followers'
     else:

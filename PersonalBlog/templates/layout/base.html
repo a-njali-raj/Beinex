@@ -8,12 +8,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* General Styles */
-/* Base Styles */
+        
 body {
     background-color: #f0f2f5;
     color: #333;
-    padding-top: 60px; /* Space for the fixed navbar */
+    padding-top: 60px; 
 }
 
 .navbar {
@@ -30,32 +29,32 @@ body {
     margin-left: auto;
 }
 
-/* Navigation Links */
+
 .navbar-nav .nav-item .nav-link {
-    color: #111213; /* Text color for Home link */
+    color: #111213; 
     font-weight: normal;
     transition: color 0.3s ease;
 }
 
 .navbar-nav .nav-item .nav-link:hover {
-    color: #007bff; /* Hover color similar to Logout link */
+    color: #007bff; 
     text-decoration: none;
 }
 
-/* Add New Post Button */
+
 .navbar-nav .nav-item .btn.add-post-btn {
-    background-color: #ffffff; /* Keep background white */
-    color: #0f1010; /* Text color matching Logout */
+    background-color: #ffffff; 
+    color: #0f1010; 
     border: none;
     font-weight: normal;
     transition: color 0.3s ease;
 }
 
 .navbar-nav .nav-item .btn.add-post-btn:hover {
-    color: #007bff; /* Hover color matching Logout link */
+    color: #007bff; 
 }
 
-/* Profile Header */
+
 .profile-header {
     background-color: #93cdc1;
     color: rgb(12, 12, 12);
@@ -69,7 +68,7 @@ body {
     margin: 0;
 }
 
-/* Post Styles */
+
 .post {
     background: white;
     padding: 20px;
@@ -87,7 +86,7 @@ body {
     line-height: 1.6;
 }
 
-/* Comments Section */
+
 .comments-section {
     margin-top: 20px;
     border-top: 1px solid #dee2e6;
@@ -102,7 +101,7 @@ body {
     border-radius: 50%;
 }
 
-/* Buttons */
+
 .btn-primary {
     background-color: #007bff;
     border-color: #007bff;
@@ -113,7 +112,7 @@ body {
     border-color: #004085;
 }
 
-/* Card Styles */
+
 .card {
     border: 1px solid #dee2e6;
     border-radius: 5px;
@@ -151,7 +150,7 @@ body {
     margin-top: 10px;
 }
 
-/* Responsive Navbar */
+
 .menu-toggle {
     cursor: pointer;
     font-size: 1.5rem;
@@ -163,7 +162,7 @@ body {
     height: 30px;
     background: transparent;
     border: none;
-    margin-left: 15px; /* Space between Logout and Menu icon */
+    margin-left: 15px; 
 }
 
 .menu-toggle .bar {
@@ -174,14 +173,14 @@ body {
     margin: 3px 0;
 }
 .menu-toggle:hover .bar {
-    background-color: #007bff; /* Darker shade on hover */
+    background-color: #007bff; 
 }
 
 .notification-icon {
     cursor: pointer;
     font-size: 1.5rem;
     color: #060606;
-    margin-left: 15px; /* Space between Logout and Notification icon */
+    margin-left: 15px; 
 }
 
 .notification-icon:hover {
@@ -206,7 +205,7 @@ body {
     display: block;
 }
 
-/* Post Image Container */
+
 .post-image-container {
     margin-bottom: 20px;
     text-align: center;
@@ -219,7 +218,7 @@ body {
     border-radius: 5px;
 }
 
-/* Post Footer */
+
 .post-footer {
     margin-top: 20px;
 }
@@ -283,57 +282,56 @@ body {
 }
 
 .message-toaster .alert-success {
-    background-color: rgba(117, 193, 172, 0.8); /* Green with transparency */
+    background-color: rgba(117, 193, 172, 0.8); 
     color: #100e0e;
 }
 
 .message-toaster .alert-error {
-    background-color: rgba(234, 169, 175, 0.8); /* Red with transparency */
+    background-color: rgba(234, 169, 175, 0.8); 
     color: #060505;
 }
-/* Adjust the position of the search button slightly to the left */
+
 .navbar .form-inline button {
-    margin-left: -10px; /* Adjust this value to move the button more to the left if needed */
+    margin-left: -10px; 
     background: none;
     border: none;
-    color: #070707; /* Color of the search icon */
-    padding: 5px 10px; /* Adjust padding as needed */
+    color: #070707; 
+    padding: 5px 10px; 
 }
 
-/* Ensure the input field and button align properly */
+
 .navbar .form-inline {
     display: flex;
     align-items: center;
 }
 
-/* Increase the space between the Home button and the search form */
+
 .navbar-nav .nav-item + .form-inline {
-    margin-left: 20px; /* Adjust this value to increase the spacing */
+    margin-left: 20px; 
 }
 
-/* Styling the search input field */
+
 .navbar .form-inline .form-control {
-    background-color: transparent; /* Transparent background */
-    color: #0b0a0a; /* Text color */
-    border: 1px solid #242323; /* Border color */
-    padding-right: 30px; /* Extra padding to make space for the icon */
+    background-color: transparent; 
+    color: #0b0a0a; 
+    border: 1px solid #242323;
+    padding-right: 30px;
 }
 
-/* Hover effect for the input field */
+
 .navbar .form-inline .form-control:hover,
 .navbar .form-inline .form-control:focus {
-    border-color: #61aefc;  /* Border color on hover/focus */
-    box-shadow: none; /* Remove default shadow */
-    outline: black; /* Remove default outline */
+    border-color: #61aefc;  
+    box-shadow: none; 
+    outline: black; 
 }
 
-/* Optional: Hover effect for the search icon button */
+
 .navbar .form-inline button:hover {
-    color: #61aefc; /* Change color on hover */
+    color: #61aefc; 
     cursor: pointer;
 }
 
-/* Responsive Design */
 @media (max-width: 767px) {
     .navbar-nav {
         flex-direction: column;
@@ -431,32 +429,7 @@ body {
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    document.querySelector('.menu-toggle').addEventListener('click', function() {
-        var sidebar = document.getElementById('userProfile');
-        sidebar.classList.toggle('show');
 
-        // Hide the sidebar after 3 seconds
-        setTimeout(function() {
-            sidebar.classList.remove('show');
-        }, 3000); // 3000 milliseconds = 3 seconds
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-    const toasters = document.querySelectorAll('.message-toaster .alert');
-    if (toasters.length > 0) {
-        setTimeout(function () {
-            toasters.forEach(function (toaster) {
-                toaster.style.opacity = '0';
-                setTimeout(function () {
-                    toaster.style.display = 'none';
-                }, 500); // Delay to match the transition
-            });
-        }, 3000); // Display for 3 seconds before disappearing
-    }
-});
-
-
-</script>
 </body>
 
     {% block extra_js %}

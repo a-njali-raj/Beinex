@@ -3,41 +3,39 @@
 {% block extra_css %}
 <style>
 .follow-button {
-    color: black; /* Default color */
-    border: 1px solid #ccc; /* Border to make it look like a button */
-    background-color: #f8f9fa; /* Light background for the button */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 14px; /* Adjust font size if needed */
-    padding: 5px 10px; /* Add some padding */
-    border-radius: 5px; /* Rounded corners */
+    color: black; 
+    border: 1px solid #ccc; 
+    background-color: #f8f9fa; 
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px; 
+    border-radius: 5px; 
 }
 
 .follow-button.following {
-    color:rgb(43, 103, 199); /* Color when following */
-    border-color: rgb(43, 103, 199); /* Border color when following */
+    color:rgb(43, 103, 199); 
+    border-color: rgb(43, 103, 199);
 }
 
 .follow-button:hover {
-    background-color: #e2e6ea; /* Hover background color */
+    background-color: #e2e6ea; 
 }
 </style>
 {% endblock %}
 {% block content %}
-    <!-- Search Results -->
     <div class="container mt-4">
         <h4>Search Results for "{{ query }}"</h4>
-        
-        <!-- Blog Posts -->
+   
         {% if posts %}
             <div class="row justify-content-center">
                 {% for post in posts %}
-                <!-- Post -->
+                
                 <div class="col-md-8 mb-4">
                     <div class="post">
                         <!-- Post Header -->
                         <div class="post-header d-flex align-items-center">
                             <div class="post-author d-flex align-items-center">
-                                <i class="fas fa-user-circle"></i> <!-- Symbol for username -->
+                                <i class="fas fa-user-circle"></i> 
                                 <span class="author-name">{{ post.author.username }}</span>
                                 {% if request.user.is_authenticated and request.user != post.author %}
         <button class="follow-button {% if request.user in post.author.followed_by.all %}following{% endif %}"

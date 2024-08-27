@@ -256,7 +256,7 @@
                 const usernameError = $('#usernameError').is(':visible');
                 const emailError = $('#emailError').is(':visible');
                 if (usernameError || emailError) {
-                    event.preventDefault(); // Prevent form submission
+                    event.preventDefault(); 
                     alert('Please correct the errors before submitting the form.');
                 }
             });
@@ -290,7 +290,7 @@
         } else if (username.length < 3) {
             errorElement.textContent = "Username must be at least 3 characters long.";
         } else {
-            errorElement.textContent = ""; // Assume valid and handle further on server-side
+            errorElement.textContent = ""; 
         }
     }
 
@@ -306,7 +306,7 @@
         } else if (email.length > 320) {
             errorElement.textContent = "Email address is too long.";
         } else {
-            errorElement.textContent = ""; // Assume valid and handle further on server-side
+            errorElement.textContent = "";
         }
     }
 
@@ -348,11 +348,11 @@
         const confirmPasswordError = document.getElementById("confirm-password-error").textContent;
 
         if (usernameError || emailError || passwordError || confirmPasswordError) {
-            return; // Prevent form submission if there are validation errors
+            return; 
         }
 
-        // Form is valid; you can now submit it
-        form.submit(); // Proceed with form submission
+      
+        form.submit(); 
     }
 });
 

@@ -3,9 +3,9 @@
 {% block extra_css %}
 <style>
     .like-button.liked, .follow-button.following {
-        color: white; /* Text color */
-        background-color: blue; /* Background color when liked or following */
-        border-color: blue; /* Border color when liked or following */
+        color: white; 
+        background-color: blue; 
+        border-color: blue; 
     }
 
     .post-title-container {
@@ -19,14 +19,14 @@
     }
 
     .edit-icon, .delete-icon {
-        color: #000; /* Icon color */
-        font-size: 1.2em; /* Icon size */
-        margin-left: 10px; /* Space between icons */
-        text-decoration: none; /* Remove underline */
+        color: #000; 
+        font-size: 1.2em; 
+        margin-left: 10px; 
+        text-decoration: none; 
     }
 
     .edit-icon:hover, .delete-icon:hover {
-        color: #007bff; /* Color on hover */
+        color: #007bff; 
     }
 
    
@@ -108,14 +108,14 @@
                 <!-- Comments Section -->
                 <div class="comments-section mt-4">
                     <h4>Comments</h4>
-                    <!-- Display the first comment only -->
+                
                     {% if comments %}
                         <div class="media mb-3 comment-item">
                             {% if comments.0.author.profile_pic %}
-                                <!-- Display user profile picture if available -->
+                           
                                 <img class="mr-3" src="{{ comments.0.author.profile_pic.url }}" alt="{{ comments.0.author.username }}" style="width: 64px; height: 64px; border-radius: 50%;">
                             {% else %}
-                                <!-- Display Font Awesome user icon if no profile picture -->
+                               
                                 <i class="fas fa-user-circle fa-3x mr-3"></i>
                             {% endif %}
                             <div class="media-body">
@@ -124,19 +124,19 @@
                                 <small class="text-muted">Posted on {{ comments.0.created_at }}</small>
                             </div>
                         </div>
-                        <!-- Arrow to load more comments -->
+                        
                         <button class="btn btn-link" onclick="toggleComments()">
                             <i class="fas fa-chevron-down"></i> Load more comments
                         </button>
-                        <!-- Hidden comments -->
+                       
                         <div id="comments" style="display: none;">
                             {% for comment in comments|slice:"1:" %}
                                 <div class="media mb-3">
                                     {% if comment.author.profile_pic %}
-                                        <!-- Display user profile picture if available -->
+                                        
                                         <img class="mr-3" src="{{ comment.author.profile_pic.url }}" alt="{{ comment.author.username }}" style="width: 64px; height: 64px; border-radius: 50%;">
                                     {% else %}
-                                        <!-- Display Font Awesome user icon if no profile picture -->
+                                        
                                         <i class="fas fa-user-circle fa-3x mr-3"></i>
                                     {% endif %}
                                     <div class="media-body">

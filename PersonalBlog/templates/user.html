@@ -2,59 +2,58 @@
 {% load static %}
 {% block extra_css %}
 <style>
-/* Add these styles in your CSS file */
+
 .post-author {
     display: flex;
     align-items: center;
-    width: 100%; /* Ensure the div takes full width for proper alignment */
+    width: 100%; 
 }
 
 .author-name {
-    margin-right: 10px; /* Space between author name and button */
-    font-weight: bold; /* Make the author's name bold */
+    margin-right: 10px; 
+    font-weight: bold;
 }
 
 .follow-button {
-    color: black; /* Default color */
-    border: 1px solid #ccc; /* Border to make it look like a button */
-    background-color: #f8f9fa; /* Light background for the button */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 14px; /* Adjust font size if needed */
-    padding: 5px 10px; /* Add some padding */
-    border-radius: 5px; /* Rounded corners */
+    color: black; 
+    border: 1px solid #ccc; 
+    background-color: #f8f9fa; 
+    cursor: pointer; 
+    font-size: 14px; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
 }
 
 .follow-button.following {
-    color:rgb(43, 103, 199); /* Color when following */
-    border-color: rgb(43, 103, 199); /* Border color when following */
+    color:rgb(43, 103, 199); 
+    border-color: rgb(43, 103, 199); 
 }
 
 .follow-button:hover {
-    background-color: #e2e6ea; /* Hover background color */
+    background-color: #e2e6ea; 
 }
 .like-button.liked {
-    color: white; /* Text color */
-    background-color: blue; /* Background color when liked */
-    border-color: blue; /* Border color when liked */
+    color: white;
+    background-color: blue; 
+    border-color: blue; 
 }
 
 </style>
 {% endblock %}
 
 {% block content %}
-    <!-- Blog Posts -->
+
     <div class="container mt-4">
         <div class="row justify-content-center">
             {% for post in posts %}
-            <!-- Post -->
             <div class="col-md-8">
                 <div class="post">
-                    <!-- Post Header -->
+                    
                     <div class="post-header d-flex align-items-center">
                         <div class="post-author d-flex align-items-center flex-grow-1">
-                            <i class="fas fa-user-circle"></i> <!-- Symbol for username -->
+                            <i class="fas fa-user-circle"></i> 
                             <span class="author-name">{{ post.author.username }}</span>
-                            <!-- Follow Button -->
+                       
                             {% if request.user.is_authenticated and request.user != post.author %}
         <button class="follow-button {% if request.user in post.author.followed_by.all %}following{% endif %}"
                 data-user-id="{{ post.author.id }}">
@@ -70,22 +69,22 @@
                         <p class="text-muted ml-3 post-date">Posted on {{ post.created_at }}</p>
                     </div>
 
-                    <!-- Post Title -->
+               
                     <h3 class="post-title">
                         <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
                     </h3>
                     
-                    <!-- Post Image -->
+                  
                     <div class="post-image-container">
                         {% if post.image %}
                             <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid">
                         {% endif %}
                     </div>
                     
-                    <!-- Post Content -->
+              
                     <p>{{ post.content }}</p>
                     
-                    <!-- Post Tags and Like Button -->
+                   
                     <div class="post-footer d-flex justify-content-between align-items-center">
                         <p><strong>Tags:</strong> 
                             {% if post.split_tags %}
@@ -97,7 +96,7 @@
                             {% endif %}
                         </p>
 
-                        <!-- Like Button -->
+                   
                         <form method="post" action="{% url 'like_post' post.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn like-button {% if request.user in post.likes.all %}liked{% endif %}">
@@ -113,17 +112,17 @@
                         
                     </div>
 
-                    <!-- Comments Section -->
+                  
                     <div class="comments-section mt-4">
                         <h4>Comments</h4>
-                        <!-- Display the first comment only -->
+                        
                         {% if post.comments.all %}
                             <div class="media mb-3 comment-item">
                                 {% if post.comments.first.author.profile_pic %}
-                                    <!-- Display user profile picture if available -->
+                                 
                                     <img class="mr-3" src="{{ post.comments.first.author.profile_pic.url }}" alt="{{ post.comments.first.author.username }}" style="width: 64px; height: 64px; border-radius: 50%;">
                                 {% else %}
-                                    <!-- Display Font Awesome user icon if no profile picture -->
+                                    
                                     <i class="fas fa-user-circle fa-3x mr-3"></i>
                                 {% endif %}
                                 <div class="media-body">
@@ -132,19 +131,19 @@
                                     <small class="text-muted">Posted on {{ post.comments.first.created_at }}</small>
                                 </div>
                             </div>
-                            <!-- Arrow to load more comments -->
+                            
                             <button class="btn btn-link" data-post-id="{{ post.id }}" data-toggle="collapse" data-target="#comments-{{ post.id }}">
                                 <i class="fas fa-chevron-down"></i> Load more comments
                             </button>
-                            <!-- Hidden comments -->
+                           
                             <div id="comments-{{ post.id }}" class="collapse">
                                 {% for comment in post.comments.all|slice:"1:" %}
                                     <div class="media mb-3">
                                         {% if comment.author.profile_pic %}
-                                            <!-- Display user profile picture if available -->
+                                            
                                             <img class="mr-3" src="{{ comment.author.profile_pic.url }}" alt="{{ comment.author.username }}" style="width: 64px; height: 64px; border-radius: 50%;">
                                         {% else %}
-                                            <!-- Display Font Awesome user icon if no profile picture -->
+                                            
                                             <i class="fas fa-user-circle fa-3x mr-3"></i>
                                         {% endif %}
                                         <div class="media-body">
@@ -161,7 +160,7 @@
                             <p>No comments yet. Be the first to comment!</p>
                         {% endif %}
 
-                        <!-- Comment Form -->
+                     
                         {% if user.is_authenticated %}
                             <form method="post" action="{% url 'post_detail' post.id %}">
                                 {% csrf_token %}
@@ -180,7 +179,6 @@
         </div>
     </div>
 
-    <!-- jQuery for toggling comments -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
