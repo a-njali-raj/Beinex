@@ -1,0 +1,85 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .follow-button {
+        color: black; /* Default color */
+        border: 1px solid #ccc; /* Border to make it look like a button */
+        background-color: #f8f9fa; /* Light background for the button */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 14px; /* Adjust font size if needed */
+        padding: 5px 10px; /* Add some padding */
+        border-radius: 5px; /* Rounded corners */
+    }
+
+    .follow-button.following {
+        color: rgb(43, 103, 199); /* Color when following */
+        border-color: rgb(43, 103, 199); /* Border color when following */
+    }
+
+    .follow-button:hover {
+        background-color: #e2e6ea; /* Hover background color */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="mb-4" style="text-align: center;">{{ title }}</h4>
+            <ul class="list-group">
+                {% for user in users_list %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <img src="{% if user.profile_pic %}{{ user.profile_pic.url }}{% else %}https://api.dicebear.com/9.x/initials/svg?seed={{ user.username }}{% endif %}" alt="Profile Image" style="width: 30px; height: 30px; object-fit: cover; margin-right: 10px;" class="img-fluid rounded-circle">
+                        <a href="">{{ user.username }}</a>
+                    </div>
+                    <div>
+                        {% if request.user.is_authenticated and list_type == 'following' and request.user != user %}
+                        <button class="follow-button {% if request.user in user.followed_by.all %}following{% endif %}"
+                                data-user-id="{{ user.id }}">
+                            {% if request.user in user.followed_by.all %}
+                                Unfollow
+                            {% else %}
+                                Follow
+                            {% endif %}
+                        </button>
+                        {% endif %}
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item">No users found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.follow-button').forEach(button => {
+            button.addEventListener('click', function () {
+                let userId = this.getAttribute('data-user-id');
+                fetch(`/follow_toggle/${userId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.followed) {
+                        this.classList.add('following');
+                        this.textContent = 'Unfollow';
+                    } else {
+                        this.classList.remove('following');
+                        this.textContent = 'Follow';
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

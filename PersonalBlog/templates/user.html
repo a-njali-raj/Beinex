@@ -25,8 +25,8 @@
 }
 
 .follow-button.following {
-    color: green; /* Color when following */
-    border-color: green; /* Border color when following */
+    color:rgb(43, 103, 199); /* Color when following */
+    border-color: rgb(43, 103, 199); /* Border color when following */
 }
 
 .follow-button:hover {
@@ -55,24 +55,16 @@
                             <i class="fas fa-user-circle"></i> <!-- Symbol for username -->
                             <span class="author-name">{{ post.author.username }}</span>
                             <!-- Follow Button -->
-                            {% if request.user.is_authenticated %}
-                                {% if request.user != post.author %}
-                                    <form method="post" action="{% url 'follow_toggle' post.author.id %}" class="follow-form" data-user-id="{{ post.author.id }}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="user_to_follow" value="{{ post.author.id }}">
-                                        <button type="submit" class="follow-button {% if request.user in post.author.followers.all %}following{% endif %}">
-                                            {% if request.user in post.author.followers.all %}
-                                                Unfollow
-                                            {% else %}
-                                                Follow
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                {% endif %}
-                            {% else %}
-                                <!-- Optional message or button for non-authenticated users -->
-                                <p><a href="{% url 'login' %}" class="btn btn-primary">Login to Follow</a></p>
-                            {% endif %}
+                            {% if request.user.is_authenticated and request.user != post.author %}
+        <button class="follow-button {% if request.user in post.author.followed_by.all %}following{% endif %}"
+                data-user-id="{{ post.author.id }}">
+            {% if request.user in post.author.followed_by.all %}
+                Unfollow
+            {% else %}
+                Follow
+            {% endif %}
+        </button>
+    {% endif %}
                         </div>
 
                         <p class="text-muted ml-3 post-date">Posted on {{ post.created_at }}</p>
@@ -191,6 +183,28 @@
     <!-- jQuery for toggling comments -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.follow-button').forEach(button => {
+        button.addEventListener('click', function () {
+            let userId = this.getAttribute('data-user-id');
+            fetch(`/follow_toggle/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => response.json()).then(data => {
+                if (data.followed) {
+                    this.classList.add('following');
+                    this.textContent = 'Unfollow';
+                } else {
+                    this.classList.remove('following');
+                    this.textContent = 'Follow';
+                }
+            });
+        });
+    });
+});
         document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.like-button').forEach(button => {
         button.addEventListener('click', function (e) {

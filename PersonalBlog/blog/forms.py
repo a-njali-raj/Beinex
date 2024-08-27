@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment,Follow, User
+from .models import Comment ,User
 
 class CommentForm(forms.ModelForm):
     class Meta:

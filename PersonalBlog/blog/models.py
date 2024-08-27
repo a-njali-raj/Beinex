@@ -10,6 +10,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=10, null=True, blank=True)
     bio = models.TextField(null=True,blank=True)
     profile_pic = models.ImageField(upload_to="media/profile-pics/", null=True, blank=True,)
+    followed_by = models.ManyToManyField('self', symmetrical=False, related_name='follows', blank=True)
     def __str__(self):
         return self.username
 
@@ -37,11 +38,3 @@ class Like(models.Model):
     
     class Meta:
         unique_together = ('post', 'user')
-
-class Follow(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
-    followed_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'followed_user')

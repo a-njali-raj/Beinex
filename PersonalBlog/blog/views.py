@@ -12,8 +12,8 @@ from .models import User,Post,Like
 # Create your views here.
 def index(request):
     return render(request,'index.html')
-@never_cache
 
+@never_cache
 def loginn(request):
     if request.method == 'POST':
         username=request.POST['username']
@@ -41,7 +41,6 @@ def loginn(request):
     return response
 
 @never_cache
-
 def signup(request):
     if request.method == 'POST':
         username=request.POST['username']
@@ -71,20 +70,20 @@ def user(request):
     return render(request, 'user.html', {'posts': posts})
 
 @never_cache
-@login_required
+@login_required(login_url='login')
 def logout(request):
     auth.logout(request)
     return redirect("login")
 
 
 @never_cache
-@login_required
+@login_required(login_url='login')
 def addpost(request):
     return render(request,'addpost.html')
 
 
 @never_cache
-@login_required
+@login_required(login_url='login')
 def post_create(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -112,8 +111,8 @@ def post_create(request):
     return render(request, 'addpost.html')
 
 
-@login_required
 @never_cache
+@login_required(login_url='login')
 def myprofile(request):
     user = request.user
     # Fetch the posts of the logged-in user
@@ -128,9 +127,8 @@ def myprofile(request):
             'tags': post_tags
         })
 
-    # Example data for followers and following - you should have actual logic here
-    followers_count = 0  # Replace with actual count if you have a followers model
-    following_count = 0  # Replace with actual count if you have a following model
+    followers_count = user.followed_by.count()  # The number of users following this user
+    following_count = user.follows.count()  # The number of users this user is following
 
     context = {
         'user': user,
@@ -142,8 +140,8 @@ def myprofile(request):
 
 
 
-@login_required
 @never_cache
+@login_required(login_url='login')
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -165,9 +163,8 @@ def edit_post(request, post_id):
         return redirect('myprofile')
 
     return render(request, 'editpost.html', {'post': post})
-
-@login_required
 @never_cache
+@login_required(login_url='login')
 def delete_post(request, post_id):
     if request.method == 'GET':
         post = get_object_or_404(Post, id=post_id, author=request.user)
@@ -175,8 +172,8 @@ def delete_post(request, post_id):
         post.save()
         return redirect('myprofile')
     
-@login_required
 @never_cache
+@login_required(login_url='login')
 def update_profile(request):
     user = request.user
 
@@ -203,9 +200,8 @@ def update_profile(request):
         return redirect('myprofile')  # Redirect to the profile page or another page after update
 
     return render(request, 'updateprofile.html', {'user': user})
-
-@login_required
 @never_cache
+@login_required(login_url='login')
 def search_results(request):
     query = request.GET.get('q')
     posts = Post.objects.filter(tag__icontains=query) | Post.objects.filter(author__username__icontains=query,is_available=True)
@@ -219,8 +215,8 @@ def search_results(request):
             post.split_tags = []  # Provide an empty list if no tags are present
 
     return render(request, 'search_results.html', {'posts': posts, 'users': users, 'query': query})
-
-
+@never_cache
+@login_required(login_url='login')
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()
@@ -247,6 +243,8 @@ def post_detail(request, post_id):
     }
     return render(request, 'post_detail.html', context)
 
+@never_cache
+@login_required(login_url='login')
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     
@@ -272,19 +270,7 @@ def like_post(request, post_id):
     
     # If not authenticated, redirect to login
     return HttpResponseRedirect(reverse('login'))
-def follow_toggle(request, user_id):
-    user_to_follow = get_object_or_404(User, id=user_id)
-    form = FollowForm(request.POST or None, current_user=request.user, initial={'user_to_follow': user_to_follow})
 
-    if form.is_valid():
-        # Save the follow relationship
-        is_following = form.save()
-
-        # Return the status of the follow action
-        return JsonResponse({'following': is_following})
-
-    # If form is not valid, return an error response
-    return JsonResponse({'error': 'Invalid request.'}, status=400)
 
 def validate_username(request):
     username = request.GET.get('username', None)
@@ -299,3 +285,39 @@ def validate_email(request):
         'is_taken': User.objects.filter(email__iexact=email).exists()
     }
     return JsonResponse(data)
+
+@never_cache
+@login_required(login_url='login')
+def follow_toggle(request, user_id):
+    user_to_follow = get_object_or_404(User, id=user_id)
+    if user_to_follow != request.user:
+        if request.user in user_to_follow.followed_by.all():
+            user_to_follow.followed_by.remove(request.user)
+            followed = False
+        else:
+            user_to_follow.followed_by.add(request.user)
+            followed = True
+        return JsonResponse({'followed': followed})
+    return JsonResponse({'error': 'Cannot follow yourself'}, status=400)
+@never_cache
+@login_required(login_url='login')
+def user_list_view(request, username, list_type):
+    user = get_object_or_404(User, username=username)
+    
+    if list_type == 'following':
+        # Users that the current user is following
+        users_list = user.follows.all()
+        title = f'{username}\'s Following'
+    elif list_type == 'followers':
+        # Users that are following the current user
+        users_list = user.followed_by.all()
+        title = f'{username}\'s Followers'
+    else:
+        users_list = []
+        title = 'User List'
+    
+    return render(request, 'user_list.html', {
+        'users_list': users_list,
+        'title': title,
+        'list_type': list_type
+    })

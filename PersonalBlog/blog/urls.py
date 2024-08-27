@@ -21,5 +21,7 @@ urlpatterns = [
     path('post/<int:post_id>/like/',views.like_post, name='like_post'),
     path('validate-username/', views.validate_username, name='validate_username'),
     path('validate-email/', views.validate_email, name='validate_email'),
-    path('follow-toggle/<int:user_id>/', views.follow_toggle, name='follow_toggle'),
+    path('follow_toggle/<int:user_id>/', views.follow_toggle, name='follow_toggle'),
+    path('user/<str:username>/<str:list_type>/', views.user_list_view, name='user_list'),
+    
     ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
